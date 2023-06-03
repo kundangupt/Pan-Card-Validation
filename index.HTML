@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>PAN Card Validation</title>
+  <script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+      // Get the input element and status element
+      const input = document.getElementById('panInput');
+      const status = document.getElementById('status');
+
+      // Add an event listener to the input element for keydown event
+      input.addEventListener('keydown', function(event) {
+        // Get the pressed key
+        const key = event.key;
+        
+        // Check if key is a number
+        const isNumber = /^\d$/.test(key);
+        
+        // Check if key is an alphabet
+        const isAlphabet = /^[A-Za-z]$/.test(key);
+
+        // Determine the current input length
+        const currentLength = input.value.length;
+
+        // Check if the key is invalid based on the current input value
+        const isInvalidKey = (
+          (currentLength < 5 && isNumber) ||                         // First 5 positions should be alphabets
+          (currentLength >= 5 && currentLength < 9 && !isNumber) ||  // Positions 6 to 9 should be numbers
+          (currentLength === 9 && isNumber)                          // 10th position should be an alphabet
+        );
+
+        // Prevent the key press if it's invalid or if the input length is already 10
+        if (isInvalidKey || currentLength >= 10) {
+          event.preventDefault();
+        }
+      });
+
+      // Add an event listener to the input element for input event
+      input.addEventListener('input', function(event) {
+        // Get the entered PAN card number
+        const panCardNumber = input.value.toUpperCase();
+
+        // Check the length of the PAN card number
+        if (panCardNumber.length === 10) {
+          // Extract the first character (alphabet)
+          const firstChar = panCardNumber.charAt(0);
+
+          // Validate the first character using a switch statement
+          switch (firstChar) {
+            case 'A':
+            case 'B':
+            case 'C':
+            case 'D':
+            case 'E':
+            case 'F':
+            case 'G':
+            case 'H':
+            case 'J':
+            case 'K':
+              status.textContent = 'Valid PAN card number';
+              break;
+            default:
+              status.textContent = 'Invalid PAN card number';
+              break;
+          }
+        } else {
+          status.textContent = 'Invalid PAN card number';
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>PAN Card Validation</h1>
+  <label for="panInput">Enter PAN Card Number:</label>
+  <input type="text" id="panInput">
+  <p id="status"></p>
+</body>
+</html>
+    
